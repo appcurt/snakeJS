@@ -1,6 +1,6 @@
-/*  --------------
- *   | Variables |
- *  --------------
+/*  -------------
+ *  | Variables |
+ *  -------------
  */
 
 var snake;
@@ -15,10 +15,12 @@ var screenWidth;
 var screenHeight;
 
 var gameState;
+var gameOverMenu;
+var restartButton;
 
-/*  -------------
- *  | Functions |
- *  -------------
+/*  ------------------
+ *  | Game Functions |
+ *  ------------------
  */
 
 function gameInitialize() {
@@ -32,6 +34,13 @@ function gameInitialize() {
     canvas.height = screenHeight;
     
     document.addEventListener("keydown", keyboardHandler);
+    
+    gameOverMenu = document.getElementById("gameOver");
+    centerMenuPosition(gameOverMenu);
+    
+    restartButton = document.getElementById("restartButton");
+    restartButton.addEventListener("click", gameRestart);
+    
     setState("play");
 }
 
@@ -50,6 +59,14 @@ function gameDraw() {
         
 }
 
+function gameRestart() {
+    hideMenu(gameOverMenu);
+    snakeInitialize();
+    foodInitialize();
+    setState("play");
+    
+}
+
 /*  --------------
  *  | Snake Func |
  *  --------------
@@ -57,7 +74,7 @@ function gameDraw() {
 
 function snakeInitialize() {
     snake = [];
-    snakeLength = 1;
+    snakeLength = 5;
     snakeSize = 20;
     snakeDirection = "down";
     
@@ -136,16 +153,16 @@ function setFoodPosition() {
 function keyboardHandler(event) {
     console.log(event);
     
-    if (event.keyCode === 39 && snakeDirection !== "left") {
+    if ((event.keyCode === 39 || event.keyCode === 68) && snakeDirection !== "left") {
         snakeDirection = "right";
     }
-    else if (event.keyCode === 37 && snakeDirection !== "right") {
+    else if ((event.keyCode === 37 || event.keyCode === 65) && snakeDirection !== "right") {
         snakeDirection = "left";
     }
-    else if (event.keyCode === 38 && snakeDirection !== "down") {
+    else if ((event.keyCode === 38 || event.keyCode === 87) && snakeDirection !== "down") {
         snakeDirection = "up";
     }
-    else if (event.keyCode === 40 && snakeDirection !== "up") {
+    else if ((event.keyCode === 40 || event.keyCode === 83) && snakeDirection !== "up") {
         snakeDirection = "down";
     }
 }
@@ -171,18 +188,46 @@ function checkFoodCollisions(snakeHeadX, snakeHeadY) {
 function checkWallCollisions(snakeHeadX, snakeHeadY) {
     if (snakeHeadX * snakeSize >= screenWidth || snakeHeadX * snakeSize < 0) {
         console.log("Wall Collision: X Axis");
-        setState("game over");
+        setState("gameover");
     }
     if (snakeHeadY * snakeSize >= screenHeight || snakeHeadY * snakeSize < 0) {
         console.log("wall Collision: Y Axis");
-        setState("game over");
+        setState("gameover");
     }        
+}
+
+function checkSnakeCollisions(snakeHeadX, snakeHeadY) {
+    
 }
 
 function setState(state) {
     gameState = state;
+    showMenu(state);
 }
 
+/* =====================================================
+ *                 Menu Functions
+ * =====================================================
+ */
+
+function displayMenu(menu) {
+    menu.style.visibility = "visible";
+}
+
+function hideMenu(menu) {
+    menu.style.visibility = "hidden";
+}
+
+function showMenu(state) {
+    if (state === "gameover") {
+        displayMenu(gameOverMenu);
+    }
+}
+
+function centerMenuPosition(menu) {
+    menu.style.top = (screenHeight / 2) - (menu.offsetHeight) + "px";
+    menu.style.left = (screenWidth / 2) - (menu.offsetWidth / 2) + "px";
+}
 /*
  * -----------------------------------------------------------
  * |                     THE GAME                            |
