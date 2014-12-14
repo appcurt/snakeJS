@@ -65,7 +65,7 @@ function gameDraw() {
     // Draw the background of the game
     context.fillStyle = "rgb(100,190,200)";
     context.fillRect(0, 0, screenWidth, screenHeight);
-
+    
 }
 
 function gameRestart() {
