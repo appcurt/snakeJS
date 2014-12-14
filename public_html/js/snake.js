@@ -112,6 +112,7 @@ function snakeUpdate() {
     
     checkFoodCollisions(snakeHeadX, snakeHeadY);
     checkWallCollisions(snakeHeadX, snakeHeadY);
+    checkSnakeCollisions(snakeHeadX, snakeHeadY);
     
     var snakeTail = snake.pop();
     snakeTail.x = snakeHeadX;
@@ -197,7 +198,12 @@ function checkWallCollisions(snakeHeadX, snakeHeadY) {
 }
 
 function checkSnakeCollisions(snakeHeadX, snakeHeadY) {
-    
+   for(var i = 1; i < snakeLength; i++) {
+       if (snakeHeadX === snake[i].x && snakeHeadY === snake[i].y) {
+           setState("gameover");
+           return;
+       }
+   } 
 }
 
 function setState(state) {
