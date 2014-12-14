@@ -231,6 +231,7 @@ function showMenu(state) {
 }
 
 function centerMenuPosition(menu) {
+    menu.style.width = "500px"; // fix later to dynamically assign
     menu.style.top = (screenHeight / 2) - (menu.offsetHeight) + "px";
     menu.style.left = (screenWidth / 2) - (menu.offsetWidth / 2) + "px";
 }
