@@ -125,16 +125,16 @@ function setFoodPosition() {
 function keyboardHandler(event) {
     console.log(event);
     
-    if(event.keyCode == "39") {
+    if(event.keyCode === 39 && snakeDirection !== "left") {
         snakeDirection = "right";
     }
-    else if(event.keyCode == "37") {
+    else if(event.keyCode === 37 && snakeDirection !== "right") {
         snakeDirection = "left";
     }
-    else if(event.keyCode == "38") {
+    else if(event.keyCode === 38 && snakeDirection !== "down") {
         snakeDirection = "up";
     }
-    else if (event.keyCode == "40") {
+    else if (event.keyCode === 40 && snakeDirection !== "up") {
         snakeDirection = "down";
     }
 }
@@ -148,5 +148,5 @@ function keyboardHandler(event) {
 gameInitialize();
 snakeInitialize();
 foodInitialize();
-setInterval(gameLoop, 1000/30);
+setInterval(gameLoop, 1000/60);
 
