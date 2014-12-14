@@ -13,6 +13,7 @@ var food;
 var context;
 var screenWidth;
 var screenHeight;
+var canvas;
 
 var gameState;
 var gameOverMenu;
@@ -24,12 +25,12 @@ var restartButton;
  */
 
 function gameInitialize() {
-    var canvas = document.getElementById("game-screen");
+    canvas = document.getElementById("game-screen");
     context = canvas.getContext("2d");
     
     screenWidth = window.innerWidth;
     screenHeight = window.innerHeight;
-    
+
     canvas.width = screenWidth;
     canvas.height = screenHeight;
     
@@ -54,9 +55,17 @@ function gameLoop() {
 }
 
 function gameDraw() {
+    // Make the game responsive to Window Resizing
+    screenWidth = window.innerWidth;
+    screenHeight = window.innerHeight;
+    canvas.width = screenWidth;
+    canvas.height = screenHeight;
+    centerMenuPosition(gameOverMenu);
+    
+    // Draw the background of the game
     context.fillStyle = "rgb(100,190,200)";
     context.fillRect(0, 0, screenWidth, screenHeight);
-        
+
 }
 
 function gameRestart() {
@@ -232,8 +241,8 @@ function showMenu(state) {
 
 function centerMenuPosition(menu) {
     menu.style.width = "500px"; // fix later to dynamically assign
-    menu.style.top = (screenHeight / 2) - (menu.offsetHeight) + "px";
-    menu.style.left = (screenWidth / 2) - (menu.offsetWidth / 2) + "px";
+    menu.style.top = ((screenHeight / 2) - (menu.offsetHeight)) + "px";
+    menu.style.left = ((screenWidth / 2) - (menu.offsetWidth / 2)) + "px";
 }
 /*
  * -----------------------------------------------------------
