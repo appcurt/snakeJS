@@ -1,3 +1,5 @@
+// BUG!! Food is sometimes drawn on top of snake body
+
 /*  -------------
  *  | Variables |
  *  -------------
