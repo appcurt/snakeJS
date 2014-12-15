@@ -69,7 +69,8 @@ function gameDraw() {
     canvas.height = screenHeight;
     
     if (gameState === "gameover") {
-        centerMenuPosition(gameOverMenu);
+        centerMenuPosition(gameOverMenu); // needed for responsive design
+        // "Game Over" manu will remain centered while window is resized
     }
     
     // Draw the background of the game
@@ -119,6 +120,7 @@ function snakeUpdate() {
     if (snakeDirection === "down") {
         snakeHeadY++;
         snakeMovement="enabled"; // see notes in keyboardHandler()
+        // allow snake to change directions once position has been updated once
     }
     else if (snakeDirection === "up") {
         snakeHeadY--;
@@ -265,6 +267,7 @@ function setState(state) {
  */
 
 function displayMenu(menu) {
+    centerMenuPosition(gameOverMenu);
     menu.style.visibility = "visible";
 }
 
