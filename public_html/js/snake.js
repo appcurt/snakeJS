@@ -1,4 +1,19 @@
-// BUG!! Food is sometimes drawn on top of snake body
+// BUG 1! (fixed) Game Over Screen is not quite centered
+// fix 1: set fixed size for element called by "gameOverMenu"
+// opt 1: made element size responsive to overall window size (500px or 200px)
+// 
+// BUG 2! (fixed) Game screen stays the same after window resizing
+// fix 2: canvas width and height are now set in looping gameDraw function
+// 
+// BUG 3! (fixed) Window can be resized such that food is off-screen
+// fix 3: added a check to gameLoop function that resets position of food
+//        if food is found to be off-screen
+// BUG 4! Snake can change directions twice before position is updated
+// fix 4: disabled movment after each keypress and re-enabled after each
+//        position update
+// BUG 5! (NOT FIXED) Food is sometimes drawn on top of snake body
+// fix 5: added a function to test upcoming food vs. current snake position
+// fix 5: added food vs. snake position check to setFoodPosition function
 
 /*  -------------
  *  | Variables |
@@ -71,7 +86,7 @@ function gameDraw() {
     canvas.height = screenHeight;
     
     if (gameState === "gameover") {
-        centerMenuPosition(gameOverMenu); // needed for responsive design
+        centerMenuPosition(gameOverMenu); // needed here for responsive design
         // "Game Over" manu will remain centered while window is resized
     }
     
@@ -98,7 +113,7 @@ function snakeInitialize() {
     snake = [];
     snakeLength = 5;
     snakeSize = 20;
-    snakeDirection = "down";
+    snakeDirection = "right";
     
     for(var i = snakeLength - 1; i >= 0; i--) {
         snake.push( {
@@ -157,6 +172,8 @@ function foodInitialize() {
         x: 0,
         y: 0
     };
+    // debugging: check that food drawn on snake is properly detected
+    // console.log(foodIsNotOnSnake(food.x, food.y));
     setFoodPosition();
 }
 
@@ -166,11 +183,36 @@ function foodDraw() {
 }
 
 function setFoodPosition() {
-    var randomX = Math.floor(Math.random() * screenWidth);
-    var randomY = Math.floor(Math.random() * screenHeight);
     
-    food.x = Math.floor(randomX / snakeSize);
-    food.y = Math.floor(randomY / snakeSize);
+    var randomX, randomY;
+    var foodPosOK = "false"; // ensure Random XY is generated at least once
+    
+    while (foodPosOK === "false") {
+        console.log("Generating Random XY for Food.");
+        randomX = Math.floor(Math.random() * screenWidth / snakeSize);
+        randomY = Math.floor(Math.random() * screenHeight / snakeSize);
+        foodPosOK = foodIsNotOnSnake(randomX, randomY);
+    }
+        food.x = Math.floor(randomX);
+        food.y = Math.floor(randomY);
+}
+
+function foodIsNotOnSnake(testFoodX, testFoodY) {
+    for (var i = 0; i < snakeLength; i++) {
+        // for debugging, show the snake array values to be checked
+        console.log("checking snake segment: " + i);
+        console.log("Food X, Y: " + testFoodX + ", " + testFoodY);
+        console.log("Snake X, Y: " + snake[i].x + ", " + snake[i].y);
+        
+        // return false if food would be drawn on snake body
+        if (testFoodX === snake[i].x && testFoodY === snake[i].y) {
+            console.log("Food Will Be Drawn Onto Snake Body");
+            return "false";
+        }
+    }
+    // return true if food will not be drawn on snake body
+    console.log("Food Will Not Be Drawn On Snake Body");
+    return "true";
 }
 
 /*  ==============================================
@@ -179,19 +221,19 @@ function setFoodPosition() {
  */ 
 
 function keyboardHandler(event) {
-//    console.log(event);
+
+    // disabled movement after each key to prevent sudden reversing of direction
+    // it was previously possible to change directions twice before
+    // the snake position had updated. For example, while going right
+    // the player could press up and quickly left, allowing the snake
+    // to head left before heading up, causing a snake collision and
+    // ending the game (when segments below 5 were checked for collisions)
     
     if ((event.keyCode === 39 || event.keyCode === 68)
         && snakeDirection !== "left" && snakeMovement !== "disabled") {
         console.log("RIGHT key detected");
         snakeDirection = "right";
         snakeMovement="disabled";
-        // disabled movement to prevent snake from turning over itself
-        // it was previously possible to change directions twice before
-        // the snake position had updated. For example, while going right
-        // the player could press up and quickly left, allowing the snake
-        // to head left before heading up, causing a snake collision and
-        // ending the game (when segments below 5 were checked for collisions)
     }
     else if ((event.keyCode === 37 || event.keyCode === 65)
         && snakeDirection !== "right" && snakeMovement !== "disabled") {
@@ -245,7 +287,7 @@ function checkWallCollisions(snakeHeadX, snakeHeadY) {
 function checkSnakeCollisions(snakeHeadX, snakeHeadY) {
    for(var i = 5; i < snakeLength; i++) {
        // starting at segment 5 because segments 1 - 4
-       // should never be able to collide if prperly on-grid
+       // should never be able to collide if properly on-grid
        if (snakeHeadX === snake[i].x && snakeHeadY === snake[i].y) {
            console.log("Snake Collision Detected");
            console.log("snake body x: " + snake[i].x);
@@ -301,5 +343,5 @@ function centerMenuPosition(menu) {
 gameInitialize();
 snakeInitialize();
 foodInitialize();
-setInterval(gameLoop, 1000/25);
+setInterval(gameLoop, 1000/20);
 
