@@ -7,6 +7,7 @@ var snake;
 var snakeLength;
 var snakeSize;
 var snakeDirection;
+var snakeMovement;
 
 var food;
 
@@ -66,7 +67,10 @@ function gameDraw() {
     screenHeight = window.innerHeight;
     canvas.width = screenWidth;
     canvas.height = screenHeight;
-    centerMenuPosition(gameOverMenu);
+    
+    if (gameState === "gameover") {
+        centerMenuPosition(gameOverMenu);
+    }
     
     // Draw the background of the game
     context.fillStyle = "rgb(100,190,200)";
@@ -114,15 +118,19 @@ function snakeUpdate() {
     
     if (snakeDirection === "down") {
         snakeHeadY++;
+        snakeMovement="enabled"; // see notes in keyboardHandler()
     }
     else if (snakeDirection === "up") {
         snakeHeadY--;
+        snakeMovement="enabled"; // see notes in keyboardHandler()
     }
     else if (snakeDirection === "left") {
         snakeHeadX--;
+        snakeMovement="enabled"; // see notes in keyboardHandler()
     }
     else if (snakeDirection === "right") {
         snakeHeadX++;
+        snakeMovement="enabled"; // see notes in keyboardHandler()
     }
     
     checkFoodCollisions(snakeHeadX, snakeHeadY);
@@ -167,19 +175,37 @@ function setFoodPosition() {
  */ 
 
 function keyboardHandler(event) {
-    console.log(event);
+//    console.log(event);
     
-    if ((event.keyCode === 39 || event.keyCode === 68) && snakeDirection !== "left") {
+    if ((event.keyCode === 39 || event.keyCode === 68)
+        && snakeDirection !== "left" && snakeMovement !== "disabled") {
+        console.log("RIGHT key detected");
         snakeDirection = "right";
+        snakeMovement="disabled";
+        // disabled movement to prevent snake from turning over itself
+        // it was previously possible to change directions twice before
+        // the snake position had updated. For example, while going right
+        // the player could press up and quickly left, allowing the snake
+        // to head left before heading up, causing a snake collision and
+        // ending the game (when segments below 5 were checked for collisions)
     }
-    else if ((event.keyCode === 37 || event.keyCode === 65) && snakeDirection !== "right") {
+    else if ((event.keyCode === 37 || event.keyCode === 65)
+        && snakeDirection !== "right" && snakeMovement !== "disabled") {
+        console.log("LEFT key detected");
         snakeDirection = "left";
+        snakeMovement="disabled";
     }
-    else if ((event.keyCode === 38 || event.keyCode === 87) && snakeDirection !== "down") {
+    else if ((event.keyCode === 38 || event.keyCode === 87)
+        && snakeDirection !== "down" && snakeMovement !== "disabled") {
+        console.log("UP key detected");
         snakeDirection = "up";
+        snakeMovement="disabled";
     }
-    else if ((event.keyCode === 40 || event.keyCode === 83) && snakeDirection !== "up") {
+    else if ((event.keyCode === 40 || event.keyCode === 83)
+        && snakeDirection !== "up" && snakeMovement !== "disabled") {
+        console.log("DOWN key detected");
         snakeDirection = "down";
+        snakeMovement="disabled";
     }
 }
 
@@ -213,8 +239,15 @@ function checkWallCollisions(snakeHeadX, snakeHeadY) {
 }
 
 function checkSnakeCollisions(snakeHeadX, snakeHeadY) {
-   for(var i = 1; i < snakeLength; i++) {
+   for(var i = 5; i < snakeLength; i++) {
+       // starting at segment 5 because segments 1 - 4
+       // should never be able to collide if prperly on-grid
        if (snakeHeadX === snake[i].x && snakeHeadY === snake[i].y) {
+           console.log("Snake Collision Detected");
+           console.log("snake body x: " + snake[i].x);
+           console.log("snake body y: " + snake[i].y);
+           console.log("snake head x: " + snakeHeadX);
+           console.log("snake head y: " + snakeHeadY);
            setState("gameover");
            return;
        }
@@ -246,7 +279,12 @@ function showMenu(state) {
 }
 
 function centerMenuPosition(menu) {
-    menu.style.width = "500px"; // fix later to dynamically assign
+    if (window.innerWidth > 500) {
+    menu.style.width = "500px";
+    }
+    else if (window.innerWidth > 200) {
+        menu.style.width = "200px";
+    }
     menu.style.top = ((screenHeight / 2) - (menu.offsetHeight)) + "px";
     menu.style.left = ((screenWidth / 2) - (menu.offsetWidth / 2)) + "px";
 }
