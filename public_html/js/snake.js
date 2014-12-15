@@ -51,6 +51,12 @@ function gameLoop() {
         snakeUpdate();
         snakeDraw();
         foodDraw();
+        // fix for bug: screen can be resized such that
+        // food goes off the screen and is inaccessible
+        if (food.x > (screenWidth / snakeSize) 
+         || food.y > (screenHeight / snakeSize)) {
+            setFoodPosition();
+        }
     }
 }
 
