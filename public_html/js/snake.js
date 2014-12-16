@@ -36,6 +36,10 @@ var canvas;
 var gameState;
 var gameOverMenu;
 var restartButton;
+var playHUD;
+var scoreBoard;
+var titleScreen;
+var startButton;
 
 /*  ------------------
  *  | Game Functions |
@@ -59,12 +63,21 @@ function gameInitialize() {
     
     restartButton = document.getElementById("restartButton");
     restartButton.addEventListener("click", gameRestart);
-    setState("play");
+    
+    playHUD = document.getElementById("playHUD");
+    scoreBoard = document.getElementById("scoreBoard");
+    
+    titleScreen = document.getElementById("titleScreen");
+    startButton = document.getElementById("startButton");
+    startButton.addEventListener("click", gameRestart);
+    
+    setState("startingMenu");
 }
 
 function gameLoop() {
     gameDraw();
     if (gameState === "play") {
+        drawScoreBoard();
         snakeUpdate();
         snakeDraw();
         foodDraw();
@@ -88,6 +101,10 @@ function gameDraw() {
         centerMenuPosition(gameOverMenu); // needed here for responsive design
         // "Game Over" manu will remain centered while window is resized
     }
+    else if (gameState === "startingMenu") {
+        centerMenuPosition(titleScreen); // needed here for responsive design
+        // Title Screen will remain centered while window is resized
+    }
     
     // Draw the background of the game
     context.fillStyle = "rgb(100,190,200)";
@@ -97,6 +114,7 @@ function gameDraw() {
 
 function gameRestart() {
     hideMenu(gameOverMenu);
+    hideMenu(titleScreen);
     snakeInitialize();
     foodInitialize();
     setState("play");
@@ -197,11 +215,11 @@ function setFoodPosition() {
 }
 
 function foodIsNotOnSnake(testFoodX, testFoodY) {
-    for (var i = 0; i < snake.length; i++) {
+    for (var i = 0; i < snake.length - 1; i++) {
         // for debugging, show the snake array values to be checked
-        console.log("checking snake segment: " + i);
-        console.log("Food X, Y: " + testFoodX + ", " + testFoodY);
-        console.log("Snake X, Y: " + snake[i].x + ", " + snake[i].y);
+        // console.log("checking snake segment: " + i);
+        // console.log("Food X, Y: " + testFoodX + ", " + testFoodY);
+        // console.log("Snake X, Y: " + snake[i].x + ", " + snake[i].y);
         
         // return false if food would be drawn on snake body
         if (testFoodX === snake[i].x && testFoodY === snake[i].y) {
@@ -311,7 +329,6 @@ function setState(state) {
  */
 
 function displayMenu(menu) {
-    centerMenuPosition(gameOverMenu);
     menu.style.visibility = "visible";
 }
 
@@ -320,8 +337,16 @@ function hideMenu(menu) {
 }
 
 function showMenu(state) {
-    if (state === "gameover") {
+    if (state === "play") {
+        displayMenu(playHUD);
+    }
+    else if (state === "gameover") {
+        centerMenuPosition(gameOverMenu);
         displayMenu(gameOverMenu);
+    }
+        else if (state === "startingMenu") {
+        centerMenuPosition(titleScreen);
+        displayMenu(titleScreen);
     }
 }
 
@@ -335,6 +360,11 @@ function centerMenuPosition(menu) {
     menu.style.top = ((screenHeight / 2) - (menu.offsetHeight)) + "px";
     menu.style.left = ((screenWidth / 2) - (menu.offsetWidth / 2)) + "px";
 }
+
+function drawScoreBoard() {
+    scoreBoard.innerHTML = "Length: " + snakeLength;
+}
+
 /*
  * -----------------------------------------------------------
  * |                     THE GAME                            |

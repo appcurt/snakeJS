@@ -14,10 +14,21 @@ and open the template in the editor.
         <link rel="stylesheet" type="text/css" href="css/style.css">
     </head>
     <body>
+        <section id="titleScreen">
+            <h1 class="title">Snake JS</h1>
+            <h2 id="instructions">( Use the Arrow Keys or WASD to move )</h2>
+            <h3 id="startButton">Click Here to Play!</h3>
+        </section>
+        
+        <section id="playHUD">
+            <h2 id="scoreBoard"></h2>
+        </section>
+        
         <section id='gameOver'>
             <h1 class='title'>GAME OVER!</h1>
             <h3 id='restartButton'>Restart?</h3>
         </section>
+        
         <canvas id="game-screen"></canvas>
         
         <script src="js/snake.js"></script>

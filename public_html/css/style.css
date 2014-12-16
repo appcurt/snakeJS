@@ -7,37 +7,60 @@ body {
     display: block;
 }
 
-#gameOver {
+#gameOver, #playHUD, #titleScreen {
     position: absolute;
     visibility: hidden;
     text-align: center;
 }
 
-h1, h3 {
+h1, h2, h3 {
     font-family: 'Corben', cursive;
     color: white;
     text-align: center;
+    margin-top: 0px;
+    padding: 0px;
+    display: inline-block;
 }
 
 .title {
+    width: 100%;
     font-size: 62px;
     margin-bottom: 0px;
     margin-top: 0px;
-
-}
-
-#restartButton {
-    border: 2px solid white;
-    border-radius: 100px;
-    margin-top: 30px;
+    padding: 0px;
     /* Make "Restart" Text unselectable */
     -webkit-user-select: none; /* Chrome/Safari */        
     -moz-user-select: none; /* Firefox */
     -ms-user-select: none; /* IE10+ */
 }
 
-#restartButton:hover {
-    background-color: #009995;
-    cursor: pointer;
+.title:hover {
+    cursor: default;
 }
 
+#restartButton, #startButton {
+    border: 2px solid white;
+    border-radius: 100px;
+    margin-top: 0px;
+    cursor: pointer;
+    display: inline-block;
+    width: 60%;
+    padding: 15px 10px 15px 10px;
+    text-align: center;
+    
+}
+
+#instructions {
+    font-size: 18px;
+    width: 90%;
+}
+
+#restartButton:hover, #startButton:hover {
+    background-color: #009995;
+    
+}
+
+#scoreBoard {
+    font-size: 18px;
+    margin: 15px 0px 0px 15px;
+}
