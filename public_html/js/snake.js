@@ -52,11 +52,11 @@ function gameInitialize() {
     canvas = document.getElementById("game-screen");
     context = canvas.getContext("2d");
 
-    screenWidth = window.innerWidth;
-    screenHeight = window.innerHeight;
+ //   screenWidth = window.innerWidth;
+ //   screenHeight = window.innerHeight;
 
-    canvas.width = screenWidth;
-    canvas.height = screenHeight;
+ //   canvas.width = screenWidth;
+ //   canvas.height = screenHeight;
 
     document.addEventListener("keydown", keyboardHandler);
 
