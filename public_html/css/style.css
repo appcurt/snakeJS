@@ -57,6 +57,11 @@ h1, h2, h3 {
 #instructions {
     font-size: 18px;
     width: 90%;
+    cursor: default;
+    /* Make Text unselectable */
+    -webkit-user-select: none; /* Chrome/Safari */        
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE10+ */
 }
 
 #restartButton:hover, #startButton:hover {
