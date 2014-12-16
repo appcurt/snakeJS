@@ -42,11 +42,6 @@ var restartButton;
  *  ------------------
  */
 
-function playBeep() {
-        var beep = new Audio("sounds/beep.mp3");
-        beep.play();
-}
-
 function gameInitialize() {
     canvas = document.getElementById("game-screen");
     context = canvas.getContext("2d");
