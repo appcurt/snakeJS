@@ -210,12 +210,10 @@ function setFoodPosition() {
         randomX = Math.floor(Math.random() * screenWidth / snakeSize);
         randomY = Math.floor(Math.random() * screenHeight / snakeSize);
         // fix for food is sometimes drawn slightly off-screen
-        if (randomX > (screenWidth - 2)) {
-            randomX--;
+        if (randomX > ((screenWidth / snakeSize) - 1)) {
             randomX--;
         }
-        if (randomY > (screenHeight - 2)) {
-            randomY--;
+        if (randomY > ((screenHeight / snakeSize) - 1)) {
             randomY--;
         }
         foodPosOK = foodIsNotOnSnake(randomX, randomY);
