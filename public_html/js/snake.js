@@ -11,7 +11,7 @@
 // BUG 4! Snake can change directions twice before position is updated
 // fix 4: disabled movment after each keypress and re-enabled after each
 //        position update
-// BUG 5! (NOT FIXED) Food is sometimes drawn on top of snake body
+// BUG 5! (fixed) Food is sometimes drawn on top of snake body
 // fix 5: added a function to test upcoming food vs. current snake position
 // fix 5: added food vs. snake position check to setFoodPosition function
 
@@ -42,6 +42,11 @@ var restartButton;
  *  ------------------
  */
 
+function playBeep() {
+        var beep = new Audio("sounds/beep.mp3");
+        beep.play();
+}
+
 function gameInitialize() {
     canvas = document.getElementById("game-screen");
     context = canvas.getContext("2d");
@@ -59,7 +64,6 @@ function gameInitialize() {
     
     restartButton = document.getElementById("restartButton");
     restartButton.addEventListener("click", gameRestart);
-    
     setState("play");
 }
 
@@ -185,9 +189,9 @@ function foodDraw() {
 function setFoodPosition() {
     
     var randomX, randomY;
-    var foodPosOK = "false"; // ensure Random XY is generated at least once
+    var foodPosOK = false; // ensure Random XY is generated at least once
     
-    while (foodPosOK === "false") {
+    while (foodPosOK === false) {
         console.log("Generating Random XY for Food.");
         randomX = Math.floor(Math.random() * screenWidth / snakeSize);
         randomY = Math.floor(Math.random() * screenHeight / snakeSize);
@@ -198,7 +202,7 @@ function setFoodPosition() {
 }
 
 function foodIsNotOnSnake(testFoodX, testFoodY) {
-    for (var i = 0; i < snakeLength; i++) {
+    for (var i = 0; i < snake.length; i++) {
         // for debugging, show the snake array values to be checked
         console.log("checking snake segment: " + i);
         console.log("Food X, Y: " + testFoodX + ", " + testFoodY);
@@ -207,12 +211,12 @@ function foodIsNotOnSnake(testFoodX, testFoodY) {
         // return false if food would be drawn on snake body
         if (testFoodX === snake[i].x && testFoodY === snake[i].y) {
             console.log("Food Will Be Drawn Onto Snake Body");
-            return "false";
+            return false;
         }
     }
     // return true if food will not be drawn on snake body
     console.log("Food Will Not Be Drawn On Snake Body");
-    return "true";
+    return true;
 }
 
 /*  ==============================================
@@ -255,6 +259,11 @@ function keyboardHandler(event) {
     }
 }
 
+/* ===================================================
+ *                Collsion Handling
+ *  ==================================================
+ */
+
 function checkFoodCollisions(snakeHeadX, snakeHeadY) {
     if (snakeHeadX === food.x && snakeHeadY === food.y) {
         console.log("Food Collision Detected");
@@ -263,15 +272,11 @@ function checkFoodCollisions(snakeHeadX, snakeHeadY) {
             x: 0,
             y: 0
         });
+        
         snakeLength++;
         setFoodPosition();
     }
 }
-
-/* ===================================================
- *                Collsion Handling
- *  ==================================================
- */
 
 function checkWallCollisions(snakeHeadX, snakeHeadY) {
     if (snakeHeadX * snakeSize >= screenWidth || snakeHeadX * snakeSize < 0) {
