@@ -28,7 +28,7 @@ h1, h2, h3 {
     margin-bottom: 0px;
     margin-top: 0px;
     padding: 0px;
-    /* Make "Restart" Text unselectable */
+    /* Make Text unselectable */
     -webkit-user-select: none; /* Chrome/Safari */        
     -moz-user-select: none; /* Firefox */
     -ms-user-select: none; /* IE10+ */
@@ -47,7 +47,10 @@ h1, h2, h3 {
     width: 60%;
     padding: 15px 10px 15px 10px;
     text-align: center;
-    
+    /* Make Text unselectable */
+    -webkit-user-select: none; /* Chrome/Safari */        
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE10+ */
 }
 
 #instructions {
