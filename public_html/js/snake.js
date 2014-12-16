@@ -1,4 +1,6 @@
-// BUG 1! (fixed) Game Over Screen is not quite centered
+/** This is a simple "Classic Snake" game in JavaScript and HTML5 **/
+
+// // BUG 1! (fixed) Game Over Screen is not quite centered
 // fix 1: set fixed size for element called by "gameOverMenu"
 // opt 1: made element size responsive to overall window size (500px or 200px)
 // 
@@ -49,28 +51,28 @@ var startButton;
 function gameInitialize() {
     canvas = document.getElementById("game-screen");
     context = canvas.getContext("2d");
-    
+
     screenWidth = window.innerWidth;
     screenHeight = window.innerHeight;
 
     canvas.width = screenWidth;
     canvas.height = screenHeight;
-    
+
     document.addEventListener("keydown", keyboardHandler);
-    
+
     gameOverMenu = document.getElementById("gameOver");
     centerMenuPosition(gameOverMenu);
-    
-    restartButton = document.getElementById("restartButton");
-    restartButton.addEventListener("click", gameRestart);
-    
-    playHUD = document.getElementById("playHUD");
-    scoreBoard = document.getElementById("scoreBoard");
-    
-    titleScreen = document.getElementById("titleScreen");
+
     startButton = document.getElementById("startButton");
     startButton.addEventListener("click", gameRestart);
-    
+    restartButton = document.getElementById("restartButton");
+    restartButton.addEventListener("click", gameRestart);
+
+    playHUD = document.getElementById("playHUD");
+    scoreBoard = document.getElementById("scoreBoard");
+
+    titleScreen = document.getElementById("titleScreen");
+    hideMenu(titleScreen); // prevent reposition of Title Screen while loading
     setState("startingMenu");
 }
 
@@ -83,8 +85,8 @@ function gameLoop() {
         foodDraw();
         // fix for bug: screen can be resized such that
         // food goes off the screen and is inaccessible
-        if (food.x > (screenWidth / snakeSize) 
-         || food.y > (screenHeight / snakeSize)) {
+        if (food.x > (screenWidth / snakeSize)
+                || food.y > (screenHeight / snakeSize)) {
             setFoodPosition();
         }
     }
@@ -96,7 +98,7 @@ function gameDraw() {
     screenHeight = window.innerHeight;
     canvas.width = screenWidth;
     canvas.height = screenHeight;
-    
+
     if (gameState === "gameover") {
         centerMenuPosition(gameOverMenu); // needed here for responsive design
         // "Game Over" manu will remain centered while window is resized
@@ -105,11 +107,11 @@ function gameDraw() {
         centerMenuPosition(titleScreen); // needed here for responsive design
         // Title Screen will remain centered while window is resized
     }
-    
+
     // Draw the background of the game
     context.fillStyle = "rgb(100,190,200)";
     context.fillRect(0, 0, screenWidth, screenHeight);
-    
+
 }
 
 function gameRestart() {
@@ -118,7 +120,7 @@ function gameRestart() {
     snakeInitialize();
     foodInitialize();
     setState("play");
-    
+
 }
 
 /*  --------------
@@ -131,9 +133,9 @@ function snakeInitialize() {
     snakeLength = 5;
     snakeSize = 20;
     snakeDirection = "right";
-    
-    for(var i = snakeLength - 1; i >= 0; i--) {
-        snake.push( {
+
+    for (var i = snakeLength - 1; i >= 0; i--) {
+        snake.push({
             x: i,
             y: 0
         });
@@ -141,7 +143,7 @@ function snakeInitialize() {
 }
 
 function snakeDraw() {
-    for(var i = 0; i < snake.length; i++) {
+    for (var i = 0; i < snake.length; i++) {
         context.fillStyle = "white";
         context.fillRect(snake[i].x * snakeSize, snake[i].y * snakeSize, snakeSize, snakeSize);
     }
@@ -150,29 +152,29 @@ function snakeDraw() {
 function snakeUpdate() {
     var snakeHeadX = snake[0].x;
     var snakeHeadY = snake[0].y;
-    
+
     if (snakeDirection === "down") {
         snakeHeadY++;
-        snakeMovement="enabled"; // see notes in keyboardHandler()
+        snakeMovement = "enabled"; // see notes in keyboardHandler()
         // allow snake to change directions once position has been updated once
     }
     else if (snakeDirection === "up") {
         snakeHeadY--;
-        snakeMovement="enabled"; // see notes in keyboardHandler()
+        snakeMovement = "enabled"; // see notes in keyboardHandler()
     }
     else if (snakeDirection === "left") {
         snakeHeadX--;
-        snakeMovement="enabled"; // see notes in keyboardHandler()
+        snakeMovement = "enabled"; // see notes in keyboardHandler()
     }
     else if (snakeDirection === "right") {
         snakeHeadX++;
-        snakeMovement="enabled"; // see notes in keyboardHandler()
+        snakeMovement = "enabled"; // see notes in keyboardHandler()
     }
-    
+
     checkFoodCollisions(snakeHeadX, snakeHeadY);
     checkWallCollisions(snakeHeadX, snakeHeadY);
     checkSnakeCollisions(snakeHeadX, snakeHeadY);
-    
+
     var snakeTail = snake.pop();
     snakeTail.x = snakeHeadX;
     snakeTail.y = snakeHeadY;
@@ -200,18 +202,18 @@ function foodDraw() {
 }
 
 function setFoodPosition() {
-    
+
     var randomX, randomY;
     var foodPosOK = false; // ensure Random XY is generated at least once
-    
+
     while (foodPosOK === false) {
         console.log("Generating Random XY for Food.");
         randomX = Math.floor(Math.random() * screenWidth / snakeSize);
         randomY = Math.floor(Math.random() * screenHeight / snakeSize);
         foodPosOK = foodIsNotOnSnake(randomX, randomY);
     }
-        food.x = Math.floor(randomX);
-        food.y = Math.floor(randomY);
+    food.x = Math.floor(randomX);
+    food.y = Math.floor(randomY);
 }
 
 function foodIsNotOnSnake(testFoodX, testFoodY) {
@@ -220,7 +222,7 @@ function foodIsNotOnSnake(testFoodX, testFoodY) {
         // console.log("checking snake segment: " + i);
         // console.log("Food X, Y: " + testFoodX + ", " + testFoodY);
         // console.log("Snake X, Y: " + snake[i].x + ", " + snake[i].y);
-        
+
         // return false if food would be drawn on snake body
         if (testFoodX === snake[i].x && testFoodY === snake[i].y) {
             console.log("Food Will Be Drawn Onto Snake Body");
@@ -235,7 +237,7 @@ function foodIsNotOnSnake(testFoodX, testFoodY) {
 /*  ==============================================
  *                  Input Functions
  *  ==============================================
- */ 
+ */
 
 function keyboardHandler(event) {
 
@@ -245,30 +247,30 @@ function keyboardHandler(event) {
     // the player could press up and quickly left, allowing the snake
     // to head left before heading up, causing a snake collision and
     // ending the game (when segments below 5 were checked for collisions)
-    
+
     if ((event.keyCode === 39 || event.keyCode === 68)
-        && snakeDirection !== "left" && snakeMovement !== "disabled") {
+            && snakeDirection !== "left" && snakeMovement !== "disabled") {
         console.log("RIGHT key detected");
         snakeDirection = "right";
-        snakeMovement="disabled";
+        snakeMovement = "disabled";
     }
     else if ((event.keyCode === 37 || event.keyCode === 65)
-        && snakeDirection !== "right" && snakeMovement !== "disabled") {
+            && snakeDirection !== "right" && snakeMovement !== "disabled") {
         console.log("LEFT key detected");
         snakeDirection = "left";
-        snakeMovement="disabled";
+        snakeMovement = "disabled";
     }
     else if ((event.keyCode === 38 || event.keyCode === 87)
-        && snakeDirection !== "down" && snakeMovement !== "disabled") {
+            && snakeDirection !== "down" && snakeMovement !== "disabled") {
         console.log("UP key detected");
         snakeDirection = "up";
-        snakeMovement="disabled";
+        snakeMovement = "disabled";
     }
     else if ((event.keyCode === 40 || event.keyCode === 83)
-        && snakeDirection !== "up" && snakeMovement !== "disabled") {
+            && snakeDirection !== "up" && snakeMovement !== "disabled") {
         console.log("DOWN key detected");
         snakeDirection = "down";
-        snakeMovement="disabled";
+        snakeMovement = "disabled";
     }
 }
 
@@ -280,12 +282,12 @@ function keyboardHandler(event) {
 function checkFoodCollisions(snakeHeadX, snakeHeadY) {
     if (snakeHeadX === food.x && snakeHeadY === food.y) {
         console.log("Food Collision Detected");
-        
+
         snake.push({
             x: 0,
             y: 0
         });
-        
+
         snakeLength++;
         setFoodPosition();
     }
@@ -299,23 +301,23 @@ function checkWallCollisions(snakeHeadX, snakeHeadY) {
     if (snakeHeadY * snakeSize >= screenHeight || snakeHeadY * snakeSize < 0) {
         console.log("wall Collision: Y Axis");
         setState("gameover");
-    }        
+    }
 }
 
 function checkSnakeCollisions(snakeHeadX, snakeHeadY) {
-   for(var i = 5; i < snakeLength; i++) {
-       // starting at segment 5 because segments 1 - 4
-       // should never be able to collide if properly on-grid
-       if (snakeHeadX === snake[i].x && snakeHeadY === snake[i].y) {
-           console.log("Snake Collision Detected");
-           console.log("snake body x: " + snake[i].x);
-           console.log("snake body y: " + snake[i].y);
-           console.log("snake head x: " + snakeHeadX);
-           console.log("snake head y: " + snakeHeadY);
-           setState("gameover");
-           return;
-       }
-   } 
+    for (var i = 5; i < snakeLength; i++) {
+        // starting at segment 5 because segments 1 - 4
+        // should never be able to collide if properly on-grid
+        if (snakeHeadX === snake[i].x && snakeHeadY === snake[i].y) {
+            console.log("Snake Collision Detected");
+            console.log("snake body x: " + snake[i].x);
+            console.log("snake body y: " + snake[i].y);
+            console.log("snake head x: " + snakeHeadX);
+            console.log("snake head y: " + snakeHeadY);
+            setState("gameover");
+            return;
+        }
+    }
 }
 
 function setState(state) {
@@ -344,7 +346,7 @@ function showMenu(state) {
         centerMenuPosition(gameOverMenu);
         displayMenu(gameOverMenu);
     }
-        else if (state === "startingMenu") {
+    else if (state === "startingMenu") {
         centerMenuPosition(titleScreen);
         displayMenu(titleScreen);
     }
@@ -352,7 +354,7 @@ function showMenu(state) {
 
 function centerMenuPosition(menu) {
     if (window.innerWidth > 500) {
-    menu.style.width = "500px";
+        menu.style.width = "500px";
     }
     else if (window.innerWidth > 200) {
         menu.style.width = "200px";
@@ -373,5 +375,5 @@ function drawScoreBoard() {
 gameInitialize();
 snakeInitialize();
 foodInitialize();
-setInterval(gameLoop, 1000/20);
+setInterval(gameLoop, 1000 / 20);
 
