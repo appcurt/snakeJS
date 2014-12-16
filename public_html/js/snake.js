@@ -61,7 +61,6 @@ function gameInitialize() {
     document.addEventListener("keydown", keyboardHandler);
 
     gameOverMenu = document.getElementById("gameOver");
-    centerMenuPosition(gameOverMenu);
 
     startButton = document.getElementById("startButton");
     startButton.addEventListener("click", gameRestart);
@@ -72,7 +71,7 @@ function gameInitialize() {
     scoreBoard = document.getElementById("scoreBoard");
 
     titleScreen = document.getElementById("titleScreen");
-    hideMenu(titleScreen); // prevent reposition of Title Screen while loading
+    
     setState("startingMenu");
 }
 
