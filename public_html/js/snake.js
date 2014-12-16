@@ -209,6 +209,15 @@ function setFoodPosition() {
         console.log("Generating Random XY for Food.");
         randomX = Math.floor(Math.random() * screenWidth / snakeSize);
         randomY = Math.floor(Math.random() * screenHeight / snakeSize);
+        // fix for food is sometimes drawn slightly off-screen
+        if (randomX > (screenWidth - 2)) {
+            randomX--;
+            randomX--;
+        }
+        if (randomY > (screenHeight - 2)) {
+            randomY--;
+            randomY--;
+        }
         foodPosOK = foodIsNotOnSnake(randomX, randomY);
     }
     food.x = Math.floor(randomX);
