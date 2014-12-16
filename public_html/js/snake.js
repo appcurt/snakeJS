@@ -1,6 +1,6 @@
 /** This is a simple "Classic Snake" game in JavaScript and HTML5 **/
 
-// // BUG 1! (fixed) Game Over Screen is not quite centered
+// BUG 1! (fixed) Game Over Screen is not quite centered
 // fix 1: set fixed size for element called by "gameOverMenu"
 // opt 1: made element size responsive to overall window size (500px or 200px)
 // 
@@ -71,8 +71,18 @@ function gameInitialize() {
     scoreBoard = document.getElementById("scoreBoard");
 
     titleScreen = document.getElementById("titleScreen");
+
+    sizeCanvas();
     
     setState("startingMenu");
+    
+}
+
+function sizeCanvas() {
+    screenWidth = window.innerWidth;
+    screenHeight = window.innerHeight;
+    canvas.width = screenWidth;
+    canvas.height = screenHeight;    
 }
 
 function gameLoop() {
@@ -92,12 +102,10 @@ function gameLoop() {
 }
 
 function gameDraw() {
+    
+    window.onResize = sizeCanvas();
     // Make the game responsive to Window Resizing
-    screenWidth = window.innerWidth;
-    screenHeight = window.innerHeight;
-    canvas.width = screenWidth;
-    canvas.height = screenHeight;
-
+    
     if (gameState === "gameover") {
         centerMenuPosition(gameOverMenu); // needed here for responsive design
         // "Game Over" manu will remain centered while window is resized
@@ -218,8 +226,8 @@ function setFoodPosition() {
         }
         foodPosOK = foodIsNotOnSnake(randomX, randomY);
     }
-    food.x = Math.floor(randomX);
-    food.y = Math.floor(randomY);
+    food.x = randomX;
+    food.y = randomY;
 }
 
 function foodIsNotOnSnake(testFoodX, testFoodY) {
