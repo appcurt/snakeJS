@@ -52,12 +52,6 @@ function gameInitialize() {
     canvas = document.getElementById("game-screen");
     context = canvas.getContext("2d");
 
- //   screenWidth = window.innerWidth;
- //   screenHeight = window.innerHeight;
-
- //   canvas.width = screenWidth;
- //   canvas.height = screenHeight;
-
     document.addEventListener("keydown", keyboardHandler);
 
     gameOverMenu = document.getElementById("gameOver");
@@ -95,7 +89,7 @@ function gameLoop() {
         // fix for bug: screen can be resized such that
         // food goes off the screen and is inaccessible
         if (food.x > (screenWidth / snakeSize)
-                || food.y > (screenHeight / snakeSize)) {
+            || food.y > (screenHeight / snakeSize)) {
             setFoodPosition();
         }
     }
@@ -214,9 +208,12 @@ function setFoodPosition() {
     var foodPosOK = false; // ensure Random XY is generated at least once
 
     while (foodPosOK === false) {
-        console.log("Generating Random XY for Food.");
+        // console.log("Generating Random XY for Food.");
         randomX = Math.floor(Math.random() * screenWidth / snakeSize);
         randomY = Math.floor(Math.random() * screenHeight / snakeSize);
+        // debugging
+        // console.log("Generated X: " + randomX);
+        // console.log("Generated Y: " + randomY);
         // fix for food is sometimes drawn slightly off-screen
         if (randomX > ((screenWidth / snakeSize) - 1)) {
             randomX--;
@@ -231,20 +228,30 @@ function setFoodPosition() {
 }
 
 function foodIsNotOnSnake(testFoodX, testFoodY) {
-    for (var i = 0; i < snake.length - 1; i++) {
+    for (var i = 0; i < snake.length - 1; i++) {        
         // for debugging, show the snake array values to be checked
         // console.log("checking snake segment: " + i);
         // console.log("Food X, Y: " + testFoodX + ", " + testFoodY);
-        // console.log("Snake X, Y: " + snake[i].x + ", " + snake[i].y);
+        // console.log("Sn_i X, Y: " + snake[i].x + ", " + snake[i].y);
 
         // return false if food would be drawn on snake body
-        if (testFoodX === snake[i].x && testFoodY === snake[i].y) {
-            console.log("Food Will Be Drawn Onto Snake Body");
-            return false;
+        if (testFoodY === snake[i].y) {
+            // debugging options
+            // console.log("Food Y Axis Matches This Snake Segment: " + i);
+            // console.log("Snake Segment Y: " + snake[i].y);
+            // console.log("GeneratedFood Y: " + testFoodY);
+            // console.log("Snake Segment X: " + snake[i].x);
+            // console.log("GeneratedFood X: " + testFoodX)
+            if (testFoodX === snake[i].x) {
+                console.log("Food Will Be Drawn On Snake Body");
+                console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                return false;
+            }
         }
     }
     // return true if food will not be drawn on snake body
     console.log("Food Will Not Be Drawn On Snake Body");
+    console.log("====================================");
     return true;
 }
 
@@ -264,25 +271,25 @@ function keyboardHandler(event) {
 
     if ((event.keyCode === 39 || event.keyCode === 68)
             && snakeDirection !== "left" && snakeMovement !== "disabled") {
-        console.log("RIGHT key detected");
+        // console.log("RIGHT key detected");
         snakeDirection = "right";
         snakeMovement = "disabled";
     }
     else if ((event.keyCode === 37 || event.keyCode === 65)
             && snakeDirection !== "right" && snakeMovement !== "disabled") {
-        console.log("LEFT key detected");
+        // console.log("LEFT key detected");
         snakeDirection = "left";
         snakeMovement = "disabled";
     }
     else if ((event.keyCode === 38 || event.keyCode === 87)
             && snakeDirection !== "down" && snakeMovement !== "disabled") {
-        console.log("UP key detected");
+        // console.log("UP key detected");
         snakeDirection = "up";
         snakeMovement = "disabled";
     }
     else if ((event.keyCode === 40 || event.keyCode === 83)
             && snakeDirection !== "up" && snakeMovement !== "disabled") {
-        console.log("DOWN key detected");
+        // console.log("DOWN key detected");
         snakeDirection = "down";
         snakeMovement = "disabled";
     }
@@ -324,10 +331,11 @@ function checkSnakeCollisions(snakeHeadX, snakeHeadY) {
         // should never be able to collide if properly on-grid
         if (snakeHeadX === snake[i].x && snakeHeadY === snake[i].y) {
             console.log("Snake Collision Detected");
-            console.log("snake body x: " + snake[i].x);
-            console.log("snake body y: " + snake[i].y);
-            console.log("snake head x: " + snakeHeadX);
-            console.log("snake head y: " + snakeHeadY);
+            // debugging options
+            // console.log("snake body x: " + snake[i].x);
+            // console.log("snake body y: " + snake[i].y);
+            // console.log("snake head x: " + snakeHeadX);
+            // console.log("snake head y: " + snakeHeadY);
             setState("gameover");
             return;
         }
@@ -386,8 +394,7 @@ function drawScoreBoard() {
  * |                     THE GAME                            |
  * -----------------------------------------------------------
  */
+
 gameInitialize();
-snakeInitialize();
-foodInitialize();
 setInterval(gameLoop, 1000 / 20);
 
